@@ -125,16 +125,16 @@ http_archive(
 # ...but the Java download is currently broken, so we use the "source" download.
 http_archive(
     name = "com_google_protobuf_javalite",
-    sha256 = "a79d19dcdf9139fa4b81206e318e33d245c4c9da1ffed21c87288ed4380426f9",
-    strip_prefix = "protobuf-3.11.4",
-    urls = ["https://github.com/protocolbuffers/protobuf/archive/v3.11.4.tar.gz"],
+    sha256 = "98e615d592d237f94db8bf033fba78cd404d979b0b70351a9e5aaff725398357",
+    strip_prefix = "protobuf-3.9.1",
+    urls = ["https://github.com/protocolbuffers/protobuf/archive/v3.9.1.tar.gz"],
 )
 
 http_archive(
     name = "com_google_protobuf",
-    sha256 = "a79d19dcdf9139fa4b81206e318e33d245c4c9da1ffed21c87288ed4380426f9",
-    strip_prefix = "protobuf-3.11.4",
-    urls = ["https://github.com/protocolbuffers/protobuf/archive/v3.11.4.tar.gz"],
+    sha256 = "98e615d592d237f94db8bf033fba78cd404d979b0b70351a9e5aaff725398357",
+    strip_prefix = "protobuf-3.9.1",
+    urls = ["https://github.com/protocolbuffers/protobuf/archive/v3.9.1.tar.gz"],
     patches = [
         "@//third_party:com_google_protobuf_fixes.diff"
     ],
@@ -241,10 +241,12 @@ http_archive(
 # You may run setup_android.sh to install Android SDK and NDK.
 android_ndk_repository(
     name = "androidndk",
+    path = "/root/android-ndk-r21e/",
 )
 
 android_sdk_repository(
     name = "androidsdk",
+    path = "/root/Android/Sdk/",
 )
 
 # iOS basic build deps.
