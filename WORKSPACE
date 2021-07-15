@@ -260,6 +260,7 @@ http_archive(
 android_ndk_repository(
     name = "androidndk",
     path = "/root/android-ndk-r21e/",
+    api_level = 21,
 )
 
 android_sdk_repository(
