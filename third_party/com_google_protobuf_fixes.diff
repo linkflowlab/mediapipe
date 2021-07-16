@@ -1,66 +1,54 @@
 diff --git a/BUILD b/BUILD
-index 79871d621..51b3a063f 100644
+index dbae719..f2a2e15 100644
 --- a/BUILD
 +++ b/BUILD
-@@ -26,7 +26,7 @@ config_setting(
+@@ -23,7 +23,7 @@ config_setting(
  # ZLIB configuration
  ################################################################################
-
+ 
 -ZLIB_DEPS = ["@zlib//:zlib"]
 +ZLIB_DEPS = ["@zlib"]
-
+ 
  ################################################################################
  # Protobuf Runtime Library
-@@ -157,6 +157,7 @@ cc_library(
+@@ -144,6 +144,7 @@ cc_library(
      includes = ["src/"],
      linkopts = LINK_OPTS,
      visibility = ["//visibility:public"],
 +    alwayslink = 1,
  )
-
+ 
  PROTOBUF_DEPS = select({
-@@ -230,6 +231,7 @@ cc_library(
+@@ -215,6 +216,7 @@ cc_library(
      linkopts = LINK_OPTS,
      visibility = ["//visibility:public"],
      deps = [":protobuf_lite"] + PROTOBUF_DEPS,
 +    alwayslink = 1,
  )
-
+ 
  # This provides just the header files for use in projects that need to build
-@@ -318,13 +320,13 @@ cc_proto_library(
-
- [native_cc_proto_library(
-     name = proto + "_cc_proto",
--    deps = [proto + "_proto"],
-     visibility = ["//visibility:private"],
-+    deps = [proto + "_proto"],
- ) for proto in WELL_KNOWN_PROTO_MAP.keys()]
-
- cc_proto_blacklist_test(
-     name = "cc_proto_blacklist_test",
--    deps = [proto + "_cc_proto" for proto in WELL_KNOWN_PROTO_MAP.keys()]
-+    deps = [proto + "_cc_proto" for proto in WELL_KNOWN_PROTO_MAP.keys()],
- )
-
- ################################################################################
-@@ -900,7 +902,6 @@ py_proto_library(
-     py_extra_srcs = glob(["python/**/__init__.py"]),
+@@ -876,7 +878,6 @@ py_proto_library(
+     protoc = ":protoc",
      py_libs = [
          ":python_srcs",
--        "@six//:six",
+-        "//external:six",
      ],
+     py_extra_srcs = glob(["python/**/__init__.py"]),
      srcs_version = "PY2AND3",
+@@ -991,6 +992,13 @@
      visibility = ["//visibility:public"],
-@@ -1002,7 +1003,9 @@ cc_library(
- # Note: We use `native_proto_common` here because we depend on an implementation-detail of
- # `proto_lang_toolchain`, which may not be available on `proto_common`.
- reject_blacklisted_files = hasattr(native_proto_common, "proto_lang_toolchain_rejects_files_do_not_use_or_we_will_break_you_without_mercy")
+ )
+ 
++proto_lang_toolchain(
++    name = "javalite_toolchain",
++    command_line = "--java_out=lite:$(OUT)",
++    runtime = ":protobuf_javalite",
++    visibility = ["//visibility:public"],
++)
 +
- cc_toolchain_blacklisted_protos = [proto + "_proto" for proto in WELL_KNOWN_PROTO_MAP.keys()] if reject_blacklisted_files else [":well_known_protos"]
-+
- proto_lang_toolchain(
-     name = "cc_toolchain",
-     blacklisted_protos = cc_toolchain_blacklisted_protos,
+ alias(
+     name = "objectivec",
+     actual = ":protobuf_objc",
 diff --git a/protobuf.bzl b/protobuf.bzl
 index 829464d44..4ac23594b 100644
 --- a/protobuf.bzl
